@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>ERC20</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+    crossorigin="anonymous">
+</head>
+
+<script src="./web3.min.js"></script>
+
+<style>
+  h1 {
+    color: lightgrey;
+  }
+  input {
+    margin: 5%
+  }
+</style>
+
+
+<!-- initiate web3 object -->
+<script>
+  if (typeof web3 !== 'undefined') {
+    web3 = new Web3(web3.currentProvider);
+  } else {
+    // set the provider you want from Web3.providers
+    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  }
+</script>
+
+<script>
+  var contractAddress = "0xfdb0dd00799870ce10599ec6f4c782579d53b80d";
+  const contractABI = [ { "anonymous": false, "inputs": [ { "indexed": true, "name": "_owner", "type": "address" }, { "indexed": true, "name": "_spender", "type": "address" }, { "indexed": false, "name": "_value", "type": "uint256" } ], "name": "Approval", "type": "event" }, { "anonymous": false, "inputs": [ { "indexed": true, "name": "_from", "type": "address" }, { "indexed": true, "name": "_to", "type": "address" }, { "indexed": false, "name": "_value", "type": "uint256" } ], "name": "Transfer", "type": "event" }, { "constant": false, "inputs": [ { "name": "_spender", "type": "address" }, { "name": "_value", "type": "uint256" } ], "name": "approve", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" } ], "name": "transfer", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": false, "inputs": [ { "name": "_from", "type": "address" }, { "name": "_to", "type": "address" }, { "name": "_value", "type": "uint256" } ], "name": "transferFrom", "outputs": [ { "name": "success", "type": "bool" } ], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "payable": false, "stateMutability": "nonpayable", "type": "constructor" }, { "constant": true, "inputs": [ { "name": "_owner", "type": "address" }, { "name": "_spender", "type": "address" } ], "name": "allowance", "outputs": [ { "name": "remaining", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" }, { "name": "", "type": "address" } ], "name": "allowed", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "_owner", "type": "address" } ], "name": "balanceOf", "outputs": [ { "name": "balance", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [ { "name": "", "type": "address" } ], "name": "balances", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "DECIMALS", "outputs": [ { "name": "", "type": "uint8" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "INITIAL_AMOUNT", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "NAME", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "owner", "outputs": [ { "name": "", "type": "address" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "SYMBOL", "outputs": [ { "name": "", "type": "string" } ], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [ { "name": "", "type": "uint256" } ], "payable": false, "stateMutability": "view", "type": "function" } ];
+  var contract = web3.eth.contract(contractABI).at(contractAddress);
+  var sendingAccount = web3.eth.accounts[0];
+
+  var transEvent = contract.Transfer({_to: sendingAccount});
+  var tokenName;
+  contract.NAME((err, res) => {
+    tokenName = res; 
+    document.getElementById("name").innerHTML = res
+  });
+  transEvent.watch((err, res) => {
+    if(!err)
+      alert("You got " + res.args._value.c[0] + " " + tokenName + " from " + res.args._from);
+    else 
+      console.log(err);
+  });
+
+  window.onload = function(){document.getElementById("currentAccount").innerHTML = sendingAccount; document.getElementById("contractAddress").innerHTML = contractAddress; document.getElementById("contractAddressInput").value = contractAddress;}
+</script>
+
+<script>
+  function setContractAddress() {  
+    contractAddress = document.getElementById("contractAddressInput").value;
+	  contract = web3.eth.contract(contractABI).at(contractAddress);
+	  sendingAccount = web3.eth.accounts[0];
+	  document.getElementById("contractAddress").innerHTML = contractAddress;
+  }
+
+  function setAccount(address) {
+	  sendingAccount = address;
+	  document.getElementById("currentAccount").innerHTML = address;
+  }
+  
+  function getTotalSupply() {
+    document.getElementById("totalSupply").innerHTML = contract.totalSupply().toString(10);
+  }
+
+  function getBalanceOf() {
+    document.getElementById("balanceOfBalance").innerHTML = contract.balanceOf(document.getElementById("balanceOfOwner").value);
+  }
+
+  function transfer() {
+    var result;
+    try {
+      contract.transfer(document.getElementById("transferTo").value, document.getElementById("transferValue").value, { from: sendingAccount });
+      result = "success!";
+    }
+    catch (err) { result = "error!" }
+    document.getElementById("transferStatus").innerHTML = result;
+  }
+
+  function transferFrom() {
+    var result;
+    try {
+      contract.transferFrom(
+        document.getElementById("transferFromFrom").value, 
+		    document.getElementById("transferFromTo").value, 
+		    document.getElementById("transferFromValue").value, 
+		    {from: sendingAccount}
+      );
+      result = "success!";
+    }
+    catch (err) { result = "error!" }
+    document.getElementById("transferFromStatus").innerHTML = result;
+  }
+
+  function approve() {
+    var result;
+    try {
+      contract.approve(document.getElementById("approveSpender").value, document.getElementById("approveValue").value, { from: sendingAccount });
+      result = "success!"
+    }
+    catch (err) { result = "error!" }
+    document.getElementById("approveStatus").innerHTML = result
+  }
+
+  function allowance() {
+    document.getElementById("allowanceRemaining").innerHTML = contract.allowance(document.getElementById("allowanceOwner").value, document.getElementById("allowanceSpender").value, { from: sendingAccount });
+  }
+</script>
+
+<body>
+  <div class="col-md-6">
+    <h1 id="name"> ERC20 Example Interface </h1>
+  </div>
+  
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">Contract Address</div>
+      <div class="card-body">
+		<p id="contractAddress"></p>
+	    <button class="btn btn-ligth" onclick="setContractAddress()">set Address</button>
+        <input id="contractAddressInput">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">Choose Account</div>
+      <div class="card-body">
+		 <p id="currentAccount"></p>
+      </div>
+	  <div class="list-group">
+        <button type="button" style="margin-bottom: 3px" class="list-group-item list-group-item-action list-group-item-secondary btn btn-light btn-outline" onclick="setAccount(web3.eth.accounts[0])">Account 1</button>
+        <button style="margin-bottom: 3px" class="list-group-item list-group-item-action list-group-item-secondary btn btn-light" onclick="setAccount(web3.eth.accounts[1])">Account 2</button>
+		<button style="margin-bottom: 3px" class="list-group-item list-group-item-action list-group-item-secondary btn btn-light" onclick="setAccount(web3.eth.accounts[2])">Account 3</button>
+      </div> 
+    </div>
+  </div> 
+ 
+
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">totalSupply()</div>
+      <div class="card-body">
+        <button type="button" class="btn btn-light" onclick="getTotalSupply()">get totalSupply</button>
+        <div id="totalSupply"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">balanceOf()</div>
+      <div class="card-body">
+        <form class="form-inline">
+          <div class="form-group">
+            <label>Owner Address</label>
+            <input id="balanceOfOwner">
+          </div>
+          <button type="button" id="balanceOfBtn" class="btn btn-light" onclick="getBalanceOf()">get balanceOf</button>
+        </form>
+        <div id="balanceOfBalance"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">transfer()</div>
+      <div class="card-body">
+        <form class="form-inline">
+          <div class="form-group">
+            <label>To Address</label>
+            <input id="transferTo">
+          </div>
+          <div class="form-group">
+            <label>Value uint</label>
+            <input id="transferValue">
+          </div>
+          <button type="button" id="transferBtn" class="btn btn-light" onclick="transfer()">transfer</button>
+        </form>
+        <div id="transferStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">transferFrom()</div>
+      <div class="card-body">
+        <form class="form-inline">
+          <div class="form-group">
+            <label>From Address</label>
+            <input id="transferFromFrom">
+          </div>
+          <div class="form-group">
+            <label>To Address</label>
+            <input id="transferFromTo">
+          </div>
+          <div class="form-group">
+            <label>Value uint</label>
+            <input id="transferFromValue">
+          </div>
+          <button type="button" id="transferFromBtn" class="btn btn-light" onclick="transferFrom()">transfer</button>
+        </form>
+        <div id="transferFromStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">approve()</div>
+      <div class="card-body">
+        <form class="form-inline">
+          <div class="form-group">
+            <label>Spender Address</label>
+            <input id="approveSpender">
+          </div>
+          <div class="form-group">
+            <label>Value uint</label>
+            <input id="approveValue">
+          </div>
+          <button type="button" id="approveBtn" class="btn btn-light" onclick="approve()">approve</button>
+        </form>
+        <div id="approveStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card text-white bg-secondary mb-3">
+      <div class="card-header">allowance()</div>
+      <div class="card-body">
+        <form class="form-inline">
+          <div class="form-group">
+            <label>Owner Address</label>
+            <input id="allowanceOwner">
+          </div>
+          <div class="form-group">
+            <label>Spender address</label>
+            <input id="allowanceSpender">
+          </div>
+          <button type="button" id="allowanceBtn" class="btn btn-light" onclick="allowance()">allowance</button>
+        </form>
+        <div id="allowanceRemaining"></div>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+
+</html>
