@@ -40,13 +40,13 @@
   var transEvent = contract.Transfer({_to: sendingAccount});
   var tokenName;
   contract.NAME((err, res) => {
-    tokenName = res; 
+    tokenName = res;
     document.getElementById("name").innerHTML = res
   });
   transEvent.watch((err, res) => {
     if(!err)
       alert("You got " + res.args._value.c[0] + " " + tokenName + " from " + res.args._from);
-    else 
+    else
       console.log(err);
   });
 
@@ -54,7 +54,7 @@
 </script>
 
 <script>
-  function setContractAddress() {  
+  function setContractAddress() {
     contractAddress = document.getElementById("contractAddressInput").value;
 	  contract = web3.eth.contract(contractABI).at(contractAddress);
 	  sendingAccount = web3.eth.accounts[0];
@@ -65,7 +65,7 @@
 	  sendingAccount = address;
 	  document.getElementById("currentAccount").innerHTML = address;
   }
-  
+
   function getTotalSupply() {
     document.getElementById("totalSupply").innerHTML = contract.totalSupply().toString(10);
   }
@@ -88,9 +88,9 @@
     var result;
     try {
       contract.transferFrom(
-        document.getElementById("transferFromFrom").value, 
-		    document.getElementById("transferFromTo").value, 
-		    document.getElementById("transferFromValue").value, 
+        document.getElementById("transferFromFrom").value,
+		    document.getElementById("transferFromTo").value,
+		    document.getElementById("transferFromValue").value,
 		    {from: sendingAccount}
       );
       result = "success!";
@@ -118,7 +118,7 @@
   <div class="col-md-6">
     <h1 id="name"> ERC20 Example Interface </h1>
   </div>
-  
+
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
       <div class="card-header">Contract Address</div>
@@ -140,10 +140,10 @@
         <button type="button" style="margin-bottom: 3px" class="list-group-item list-group-item-action list-group-item-secondary btn btn-light btn-outline" onclick="setAccount(web3.eth.accounts[0])">Account 1</button>
         <button style="margin-bottom: 3px" class="list-group-item list-group-item-action list-group-item-secondary btn btn-light" onclick="setAccount(web3.eth.accounts[1])">Account 2</button>
 		<button style="margin-bottom: 3px" class="list-group-item list-group-item-action list-group-item-secondary btn btn-light" onclick="setAccount(web3.eth.accounts[2])">Account 3</button>
-      </div> 
+      </div>
     </div>
-  </div> 
- 
+  </div>
+
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
