@@ -36,7 +36,7 @@ contract ERC20 is ERC20Interface {
 
     mapping (address => uint256) public balances;
 
-    mapping (address => mapping (address => uint256)) public allowed;
+    mapping (address => mapping (address => uint256)) allowed;
 
     constructor() public {
         totalSupply = INITIAL_AMOUNT;

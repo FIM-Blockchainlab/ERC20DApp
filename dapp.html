@@ -18,6 +18,14 @@
   input {
     margin: 5%
   }
+  .card-header {
+    height: 50px;
+  }
+  img {
+    height: 100%; 
+    margin: 0px;
+  }
+
 </style>
 
 
@@ -116,12 +124,16 @@
 
 <body>
   <div class="col-md-6">
+    <img src="./logo.svg" style="margin-left: auto; margin-right: auto; display: block">
+  </div>
+  
+  <div class="col-md-6">
     <h1 id="name"> ERC20 Example Interface </h1>
   </div>
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">Contract Address</div>
+      <div class="card-header">Contract Address <img align="right" src="./logo.svg"></div>
       <div class="card-body">
 		<p id="contractAddress"></p>
 	    <button class="btn btn-ligth" onclick="setContractAddress()">set Address</button>
@@ -132,7 +144,7 @@
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">Choose Account</div>
+      <div class="card-header">Choose Account<img align="right" src="./logo.svg"></div>
       <div class="card-body">
 		 <p id="currentAccount"></p>
       </div>
@@ -147,7 +159,7 @@
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">totalSupply()</div>
+      <div class="card-header">totalSupply()<img align="right" src="./logo.svg"></div>
       <div class="card-body">
         <button type="button" class="btn btn-light" onclick="getTotalSupply()">get totalSupply</button>
         <div id="totalSupply"></div>
@@ -157,7 +169,7 @@
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">balanceOf()</div>
+      <div class="card-header">balanceOf()<img align="right" src="./logo.svg"></div>
       <div class="card-body">
         <form class="form-inline">
           <div class="form-group">
@@ -173,7 +185,7 @@
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">transfer()</div>
+      <div class="card-header">transfer()<img align="right" src="./logo.svg"></div>
       <div class="card-body">
         <form class="form-inline">
           <div class="form-group">
@@ -193,7 +205,7 @@
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">transferFrom()</div>
+      <div class="card-header">transferFrom()<img align="right" src="./logo.svg"></div>
       <div class="card-body">
         <form class="form-inline">
           <div class="form-group">
@@ -217,7 +229,7 @@
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">approve()</div>
+      <div class="card-header">approve()<img align="right" src="./logo.svg"></div>
       <div class="card-body">
         <form class="form-inline">
           <div class="form-group">
@@ -237,7 +249,7 @@
 
   <div class="col-md-6">
     <div class="card text-white bg-secondary mb-3">
-      <div class="card-header">allowance()</div>
+      <div class="card-header">allowance()<img align="right" src="./logo.svg"></div>
       <div class="card-body">
         <form class="form-inline">
           <div class="form-group">
